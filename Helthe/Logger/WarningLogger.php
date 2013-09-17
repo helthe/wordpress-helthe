@@ -10,7 +10,7 @@
  */
 
 /**
- * Helthe deprecated logger. Trigger E_USER_WARNING errors.
+ * Helthe warning logger. Trigger E_USER_WARNING errors.
  *
  * @author Carl Alexander
  */
