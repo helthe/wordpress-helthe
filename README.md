@@ -4,7 +4,7 @@ This is the official repository for the Helthe Error Monitoring plugin.
 
 ## Description
 
-WordPress Error Monitoring plugin was built the ground up by [Helthe](https://www.helthe.co) to extract relevant errors from WordPress and log them for you in your PHP error log.
+WordPress Error Monitoring plugin was built the ground up by [Helthe](https://helthe.co) to extract relevant errors from WordPress and log them for you in your PHP error log.
 
 ## Installation
 

@@ -13,7 +13,7 @@ Become a bug fixing hero! Get all the information you need to solve those pesky 
 
 Wondering what's really going on with your WordPress installation? WordPress has a very unique way of dealing with [errors](http://www.carlalexander.ca/programming/diving-into-wordpress-errors/). Because of that, WordPress will often not let you know if there is a problem and that can mean hours of painful troubleshooting for you.
 
-WordPress Error Monitoring plugin was built the ground up by [Helthe](https://www.helthe.co) to extract relevant errors from WordPress and log them for you in your PHP error log.
+WordPress Error Monitoring plugin was built the ground up by [Helthe](https://helthe.co) to extract relevant errors from WordPress and log them for you in your PHP error log.
 
 This plugin was specifically designed to be used in a production environment.
 
