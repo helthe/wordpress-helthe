@@ -24,7 +24,6 @@ class Helthe_Logger_NoticeLogger
         $logger = new self();
 
         add_action('doing_it_wrong_run', array($logger, 'logWrong'), 10, 2);
-        add_action('http_api_debug', array($logger, 'logHttp'), 10, 5);
     }
 
     /**
@@ -36,24 +35,6 @@ class Helthe_Logger_NoticeLogger
     public function logWrong($function, $message)
     {
         $this->triggerError(sprintf('%1$s was called incorrectly. %2$s', $function, $message));
-    }
-
-    /**
-     * Checks http responses for errors.
-     *
-     * @param mixed  $response
-     * @param string $type
-     * @param string $class
-     * @param array  $args
-     * @param string $url
-     */
-    public function logHttp($response, $type, $class, $args, $url)
-    {
-        if (!$response instanceof WP_Error) {
-            return;
-        }
-
-        $this->triggerError(sprintf('%1$s returned "%2$s" when trying to reach "%3$s".', $class, $response->errors['http_request_failed'][0], $url));
     }
 
     /**
