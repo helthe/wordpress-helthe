@@ -19,7 +19,7 @@ This plugin was specifically designed to be used in a production environment.
 
 == Installation ==
 
-1. Install either via the WordPress.org plugin directory, or by uploading the `wordpress-helthe` folder to the `/wp-content/plugins/` directory.
+1. Install either via the WordPress.org plugin directory, or by uploading the `helthe-monitor` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Configure the plugin by going to the `Helthe Monitoring` menu that appears in your `Settings` admin menu.
 4. Go save the cheerleader!

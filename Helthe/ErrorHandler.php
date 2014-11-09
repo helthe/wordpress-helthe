@@ -17,54 +17,66 @@
 class Helthe_ErrorHandler
 {
     /**
+     * WordPress Plugin API manager.
+     *
+     * @var Helthe_PluginAPI_Manager
+     */
+    private $plugin_api_manager;
+
+    /**
      * @var string
      */
-    private $reservedMemory;
+    private $reserved_memory;
 
     /**
      * Register the error handler.
      *
-     * @param integer $level
+     * @param Helthe_PluginAPI_Manager $plugin_api_manager
+     * @param int                      $level
      *
      * @return Helthe_ErrorHandler
      */
-    public static function register($level = null)
+    public static function register(Helthe_PluginAPI_Manager $plugin_api_manager, $level = null)
     {
-        $handler = new self();
+        $handler = new self($plugin_api_manager);
 
         if (null !== $level) {
             error_reporting($level);
         }
 
-        // Disable xdebug stack traces
-        if (extension_loaded('xdebug')) {
-            xdebug_disable();
-        }
-
-        set_error_handler(array($handler, 'handleError'), $level);
-        set_exception_handler(array($handler, 'handleException'));
-        register_shutdown_function(array($handler, 'handleFatal'));
-        $handler->reservedMemory = str_repeat('x', 10240);
+        set_error_handler(array($handler, 'handle_error'), $level);
+        set_exception_handler(array($handler, 'handle_exception'));
+        register_shutdown_function(array($handler, 'handle_fatal'));
 
         return $handler;
     }
 
     /**
+     * Constructor.
+     *
+     * @param Helthe_PluginAPI_Manager $plugin_api_manager
+     */
+    public function __construct(Helthe_PluginAPI_Manager $plugin_api_manager)
+    {
+        $this->plugin_api_manager = $plugin_api_manager;
+        $this->reserved_memory = str_repeat('x', 10240);
+    }
+
+    /**
      * Handles errors.
      *
-     * @param integer $level
+     * @param int     $level
      * @param string  $message
      * @param string  $file
-     * @param integer $line
-     * @param array   $context
+     * @param int     $line
      *
      * @return boolean
      */
-    public function handleError($level, $message, $file = 'unknown', $line = 0, array $context = array())
+    public function handle_error($level, $message, $file = 'unknown', $line = 0)
     {
-        do_action('helthe_handle_error', $message);
+        $this->plugin_api_manager->do_hook('helthe_handle_error', $message, $level, $file, $line);
 
-        $this->handleException(new Helthe_Exception_ContextErrorException($this->buildErrorMessage($level, $message, $file, $line), 0, $level, $file, $line, $context));
+        $this->handle_exception(new ErrorException($message, 0, $level, $file, $line));
 
         return false;
     }
@@ -74,19 +86,15 @@ class Helthe_ErrorHandler
      *
      * @param Exception $exception
      */
-    public function handleException(Exception $exception)
+    public function handle_exception(Exception $exception)
     {
-        $level = E_RECOVERABLE_ERROR;
-
-        if ($exception instanceof ErrorException) {
-            $level = $exception->getSeverity();
-        }
+        $this->plugin_api_manager->do_hook('helthe_handle_exception', $exception);
     }
 
     /**
      * Handles fatal errors.
      */
-    public function handleFatal()
+    public function handle_fatal()
     {
         if (null === $error = error_get_last()) {
             return;
@@ -96,41 +104,14 @@ class Helthe_ErrorHandler
         $level = $error['type'];
 
         // Only handle PHP fatal errors
-        if (!in_array($level, array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE))) {
+        if (!in_array($level, array(E_ERROR, E_USER_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE))) {
             return;
         }
 
-        $this->handleException(new ErrorException($this->buildErrorMessage($level, $error['message'], $error['file'], $error['line']), 0, $level, $error['file'], $error['line']));
-    }
+        $exception = new Helthe_Exception_FatalErrorException($error['message'], 0, $level, $error['file'], $error['line']);
 
-    /**
-     * Builds the error message.
-     *
-     * @param integer $level
-     * @param string  $message
-     * @param string  $file
-     * @param integer $line
-     *
-     * @return string
-     */
-    private function buildErrorMessage($level, $message, $file, $line)
-    {
-        $levels = array(
-            E_WARNING           => 'Warning',
-            E_NOTICE            => 'Notice',
-            E_USER_ERROR        => 'User Error',
-            E_USER_WARNING      => 'User Warning',
-            E_USER_NOTICE       => 'User Notice',
-            E_STRICT            => 'Runtime Notice',
-            E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
-            E_DEPRECATED        => 'Deprecated',
-            E_USER_DEPRECATED   => 'User Deprecated',
-            E_ERROR             => 'Error',
-            E_CORE_ERROR        => 'Core Error',
-            E_COMPILE_ERROR     => 'Compile Error',
-            E_PARSE             => 'Parse',
-        );
+        $this->plugin_api_manager->do_hook('helthe_handle_fatal', $exception);
 
-        return sprintf('%s: %s in %s line %d', isset($levels[$level]) ? $levels[$level] : $level, $message, $file, $line);
+        $this->handle_exception($exception);
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
 /*
-Plugin Name: Helthe Error Monitoring
+Plugin Name: Helthe Monitor for WordPress
 Plugin URI: http://www.helthe.co
 Description: World class error monitoring for WordPress.
 Version: Beta
 Author: Carl Alexander
-Author URI: http://www.carlalexander.ca
+Author URI: https://helthe.co
 License: GPL3
 */
 
@@ -14,5 +14,6 @@ License: GPL3
 require_once __DIR__ . '/Helthe/Autoloader.php';
 Helthe_Autoloader::register();
 
-// Register plugin
-Helthe_Plugin::register();
+// Load Helthe
+$helthe = new Helthe_Plugin();
+$helthe->load();

@@ -10,29 +10,25 @@
  */
 
 /**
- * Manages the admin pages for the plugin.
+ * Handles the rendering of the plugin admin page.
  *
  * @author Carl Alexander
  */
 class Helthe_Admin_Page
 {
     /**
+     * Slug used by the admin page.
+     *
+     * @var string
+     */
+    const SLUG = 'helthe';
+
+    /**
+     * The plugin options.
+     *
      * @var array
      */
     private $options;
-
-    /**
-     * Register the admin page class with all the appropriate WordPress hooks.
-     *
-     * @param array $options
-     */
-    public static function register(array $options = array())
-    {
-        $page = new self($options);
-
-        add_action('admin_init', array($page, 'configure'));
-        add_action('admin_menu', array($page, 'addAdminPage'));
-    }
 
     /**
      * Constructor.
@@ -45,28 +41,6 @@ class Helthe_Admin_Page
     }
 
     /**
-     * Adds the admin page.
-     */
-    public function addAdminPage()
-    {
-        add_options_page(__('Helthe Error Monitoring', 'helthe'), __('Helthe Monitoring', 'helthe'), 'install_plugins', 'helthe', array($this, 'render'));
-    }
-
-    /**
-     * Use the Settings API to configure the option page.
-     */
-    public function configure()
-    {
-        // Register settings
-        register_setting('helthe', 'helthe');
-
-        // General Section
-        add_settings_section('helthe-general', __('General', 'helthe'), array($this, 'renderGeneralSection'), 'helthe');
-        add_settings_field('helthe-error-reporting', __('Error Reporting Level', 'helthe'), array($this, 'renderErrorReportingField'), 'helthe', 'helthe-general');
-
-    }
-
-    /**
      * Renders the admin page using the Settings API.
      */
     public function render()
@@ -74,7 +48,7 @@ class Helthe_Admin_Page
         ?>
         <div class="wrap" id="helthe-admin">
             <div id="icon-tools" class="icon32"><br></div>
-            <h2><?php _e('Helthe Error Monitoring Configuration', 'helthe'); ?></h2>
+            <h2><?php _e('Helthe Monitor Configuration', 'helthe'); ?></h2>
             <form action="options.php" method="POST">
                 <?php settings_fields('helthe'); ?>
                 <?php do_settings_sections('helthe'); ?>

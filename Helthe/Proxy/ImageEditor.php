@@ -28,11 +28,11 @@ class Helthe_Proxy_ImageEditor extends WP_Image_Editor
     private static $implementations = array();
 
     /**
-     * The implemantation used by the wrapper.
+     * The implementation used by the proxy.
      *
      * @var string
      */
-    private static $chosenImplementation;
+    private static $chosen_implementation;
 
     /**
      * @var WP_Image_Editor
@@ -40,31 +40,20 @@ class Helthe_Proxy_ImageEditor extends WP_Image_Editor
     private $editor;
 
     /**
-     * Register the image editor with the appropriate WordPress filters.
-     */
-    public static function register()
-    {
-        // Hook in as late as possible to allow other plugins to leverage the filter.
-        add_filter('wp_image_editors', array('Helthe_Proxy_ImageEditor', 'registerImageEditor'), 9999);
-    }
-
-    /**
-     * Registers the image editor as the only implementation. Saves all other implementations for internal usage.
+     * Sets the implementations that the proxy can use.
      *
      * @param array $implementations
-     *
-     * @return array
      */
-    public static function registerImageEditor($implementations = array())
+    public static function set_implementations(array $implementations)
     {
         self::$implementations = $implementations;
-
-        return array('Helthe_Proxy_ImageEditor');
     }
 
     /**
      * Runs tests on every registered implementation. Saves the chosen implementation.
      * This function mirrors the testing done by _wp_image_editor_choose.
+     *
+     * @see _wp_image_editor_choose()
      *
      * @param array $args
      *
@@ -85,12 +74,12 @@ class Helthe_Proxy_ImageEditor extends WP_Image_Editor
                 continue;
             }
 
-            self::$chosenImplementation = $implementation;
+            self::$chosen_implementation = $implementation;
 
             return true;
         }
 
-        do_action('helthe_image_editor_not_found', __('No image editor could be selected.', 'helthe'));
+        do_action('helthe_image_editor_not_found', self::$implementations);
 
         return false;
     }
@@ -100,15 +89,15 @@ class Helthe_Proxy_ImageEditor extends WP_Image_Editor
      *
      * @param string $mime
      *
-     * @return boolean
+     * @return boon
      */
     public static function supports_mime_type($mime)
     {
-        if (!self::$chosenImplementation) {
+        if (!self::$chosen_implementation) {
             return false;
         }
 
-        return call_user_func(array(self::$chosenImplementation, 'supports_mime_type'), $mime);
+        return call_user_func(array(self::$chosen_implementation, 'supports_mime_type'), $mime);
     }
 
     /**
@@ -118,7 +107,7 @@ class Helthe_Proxy_ImageEditor extends WP_Image_Editor
      */
     public function __construct($file)
     {
-        $this->editor = new self::$chosenImplementation($file);
+        $this->editor = new self::$chosen_implementation($file);
     }
 
     /**
