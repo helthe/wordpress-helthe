@@ -15,5 +15,5 @@ require_once __DIR__ . '/Helthe/Autoloader.php';
 Helthe_Autoloader::register();
 
 // Load Helthe
-$helthe = new Helthe_Plugin();
+$helthe = new Helthe_Plugin(__FILE__);
 $helthe->load();

@@ -18,28 +18,44 @@
 class Helthe_Subscriber_EnsureLoadedFirstSubscriber implements Helthe_PluginAPI_HookSubscriberInterface
 {
     /**
+     * The basename of the plugin.
+     *
+     * @var string
+     */
+    private $basename;
+
+    /**
      * {@inheritdoc}
      */
     public static function get_hooks()
     {
         return array(
-            'activated_plugin' => 'ensure_loaded_first'
+            'pre_update_option_active_plugins' => array('ensure_loaded_first', 9999)
         );
+    }
+
+    /**
+     * Constructor
+     *
+     * @param string $basename
+     */
+    public function __construct($basename)
+    {
+        $this->basename = $basename;
     }
 
     /**
      * Ensures that the plugin is always the first one to be loaded.
      */
-    public function ensure_loaded_first()
+    public function ensure_loaded_first(array $plugins)
     {
-        $plugin = 'helthe-monitor/wp-helthe.php';
-        $plugins = get_option('active_plugins');
-        $key = array_search($plugin, $plugins);
+        $key = array_search($this->basename, $plugins);
 
         if (false !== $key) {
             array_splice($plugins, $key, 1);
-            array_unshift($plugins, $plugin);
-            update_option('active_plugins', $plugins);
+            array_unshift($plugins, $this->basename);
         }
+
+        return $plugins;
     }
 }

@@ -24,6 +24,13 @@ class Helthe_Plugin
     const VERSION = 'beta';
 
     /**
+     * The basename of the plugin.
+     *
+     * @var string
+     */
+    private $basename;
+
+    /**
      * The plugin exception collector.
      *
      * @var Helthe_Exception_Collector
@@ -53,9 +60,12 @@ class Helthe_Plugin
 
     /**
      * Constructor.
+     *
+     * @param string $file
      */
-    public function __construct()
+    public function __construct($file)
     {
+        $this->basename = plugin_basename($file);
         $this->loaded = false;
         $this->options = get_option('helthe', array());
         $this->plugin_api_manager = new Helthe_PluginAPI_Manager();
@@ -150,7 +160,7 @@ class Helthe_Plugin
             new Helthe_Subscriber_AdminPageSubscriber(new Helthe_Admin_Page($this->get_options())),
             new Helthe_Subscriber_CollectorSubscriber($this->collector),
             new Helthe_Subscriber_DeprecatedSubscriber($this->plugin_api_manager),
-            new Helthe_Subscriber_EnsureLoadedFirstSubscriber(),
+            new Helthe_Subscriber_EnsureLoadedFirstSubscriber($this->basename),
             new Helthe_Subscriber_NoticeSubscriber($this->plugin_api_manager),
             new Helthe_Subscriber_SlowHookSubscriber($this->plugin_api_manager),
             new Helthe_Subscriber_WarningSubscriber($this->plugin_api_manager),
