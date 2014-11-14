@@ -23,7 +23,7 @@ class Helthe_Autoloader
      */
     public static function autoload($class)
     {
-        if (0 !== strpos($class, 'Helthe') && 0 !== strpos($class, 'WP')) {
+        if (0 !== strpos($class, 'Helthe')) {
             return;
         }
 
