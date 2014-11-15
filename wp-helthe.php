@@ -3,7 +3,7 @@
 /*
 Plugin Name: Helthe Monitor for WordPress
 Plugin URI: http://www.helthe.co
-Description: World class error monitoring for WordPress.
+Description: Giving you the WordPress bug fixing powers you deserve.
 Version: Beta
 Author: Carl Alexander
 Author URI: https://helthe.co
