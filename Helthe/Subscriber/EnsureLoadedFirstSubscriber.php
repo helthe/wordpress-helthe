@@ -46,6 +46,10 @@ class Helthe_Subscriber_EnsureLoadedFirstSubscriber implements Helthe_PluginAPI_
 
     /**
      * Ensures that the plugin is always the first one to be loaded.
+     *
+     * @param array $plugins
+     *
+     * @return array
      */
     public function ensure_loaded_first(array $plugins)
     {
