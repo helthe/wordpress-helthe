@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the WordPress Helthe plugin.
+ * This file is part of the WordPress Helthe Monitor plugin.
  *
- * (c) Helthe
+ * (c) Carl Alexander <carlalexander@helthe.co>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
