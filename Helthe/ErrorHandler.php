@@ -70,7 +70,7 @@ class Helthe_ErrorHandler
      * @param string  $file
      * @param int     $line
      *
-     * @return boolean
+     * @return bool
      */
     public function handle_error($level, $message, $file = 'unknown', $line = 0)
     {

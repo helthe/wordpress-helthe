@@ -57,7 +57,7 @@ class Helthe_Proxy_ImageEditor extends WP_Image_Editor
      *
      * @param array $args
      *
-     * @return boolean
+     * @return bool
      */
     public static function test($args = array())
     {

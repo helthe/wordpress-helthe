@@ -35,7 +35,7 @@ class Helthe_Autoloader
     /**
      * Registers Helthe_Autoloader as an SPL autoloader.
      *
-     * @param boolean $prepend
+     * @param bool $prepend
      */
     public static function register($prepend = false)
     {
