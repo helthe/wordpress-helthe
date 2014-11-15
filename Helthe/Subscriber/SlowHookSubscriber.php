@@ -72,7 +72,7 @@ class Helthe_Subscriber_SlowHookSubscriber implements Helthe_PluginAPI_HookSubsc
             );
         }
 
-        //$this->hooks[$hook_name]['timers'][] = new Helthe_Timer();
+        $this->hooks[$hook_name]['timers'][] = new Helthe_Timer();
     }
 
     /**
